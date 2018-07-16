@@ -22,5 +22,13 @@ pipeline {
         sh 'git remote -v'
       }
     }
+    stage('3') {
+      steps {
+        sh '''touch 123.txt
+git add .
+git commit -m "test"
+git push origin jenkins'''
+      }
+    }
   }
 }
