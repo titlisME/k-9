@@ -12,5 +12,15 @@ pipeline {
         sh 'git branch'
       }
     }
+    stage('1') {
+      steps {
+        sh 'git log'
+      }
+    }
+    stage('2') {
+      steps {
+        sh 'git remote -v'
+      }
+    }
   }
 }
