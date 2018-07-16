@@ -8,10 +8,7 @@ pipeline {
     }
     stage('Pull next commit from master') {
       steps {
-        sh '''touch test.txt
-git add .
-git commit -m "test push"
-git push origin jenkins'''
+        sh 'git log'
       }
     }
   }
