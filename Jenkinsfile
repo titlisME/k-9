@@ -9,7 +9,8 @@ pipeline {
     }
     stage('Pull next commit from master') {
       steps {
-        sh 'git log'
+        sh '''git branch
+git log'''
       }
     }
   }
