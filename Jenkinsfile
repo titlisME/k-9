@@ -11,7 +11,7 @@ pipeline {
         sh '''touch test.txt
 git add .
 git commit -m "test push"
-git push origin backtesting'''
+git push origin jenkins'''
       }
     }
   }
