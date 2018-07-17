@@ -1491,6 +1491,10 @@ public class MessagingController {
         }
     }
 
+    public void sendMessageBlocking(Account account, Message message) throws MessagingException {
+        Backend backend = getBackend(account);
+        backend.sendMessage(message);
+    }
 
     public void sendPendingMessages(MessagingListener listener) {
         final Preferences prefs = Preferences.getPreferences(context);
@@ -1845,8 +1849,12 @@ public class MessagingController {
         return getBackend(account).getSupportsSearchByDate();
     }
 
-    public void checkServerSettings(Account account) throws MessagingException {
-        getBackend(account).checkServerSettings();
+    public void checkIncomingServerSettings(Account account) throws MessagingException {
+        getBackend(account).checkIncomingServerSettings();
+    }
+
+    public void checkOutgoingServerSettings(Account account) throws MessagingException {
+        getBackend(account).checkOutgoingServerSettings();
     }
 
     public void moveMessages(final Account srcAccount, final String srcFolder,
