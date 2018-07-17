@@ -10,7 +10,8 @@ pipeline {
     stage('Pull next commit') {
       steps {
         withCredentials(bindings: [usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-          sh 'git log'
+          sh '''git pull origin jenkins
+git log'''
         }
 
       }
