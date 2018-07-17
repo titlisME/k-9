@@ -13,6 +13,7 @@ pipeline {
           sh '''git log --reverse | tail -n 10
 git branch -r
 git remote -v
+git checkout -b master origin/master
 commits=$(git log --reverse --format=%H HEAD..master)'''
         }
 
