@@ -15,8 +15,17 @@ pipeline {
 else
   git remote add neworigin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/titlisME/k-9.git
 fi
-git fetch neworigin master
-git pull neworigin master
+git fetch --all
+
+currentbranch=$(git branch | grep "\\* .*" | sed -E "s/\\* (.*)/\\1/")
+if git show-ref refs/heads/master > /dev/null; then
+  git checkout master
+else
+  git checkout -b master neworigin/master
+fi
+
+git checkout $currentbranch
+
 commits=$(git log --reverse --format=%H HEAD..master)
 if [ -z "$commits" ]; then 
   echo "no more commits. done\\!";
