@@ -11,7 +11,7 @@ pipeline {
       steps {
         withCredentials(bindings: [usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
           sh '''git pull origin jenkins
-git log'''
+git log | tail -n 10'''
         }
 
       }
