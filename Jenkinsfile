@@ -10,23 +10,15 @@ pipeline {
     stage('Pull next commit') {
       steps {
         withCredentials(bindings: [usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-          sh '''touch test2.txt
-git add .
-git commit -m "test"
-origin=$(git remote -v | grep -m1 "" | sed -E "s/.*https:\\/\\/(.*.git).*/\\1/")
-git push https://${GIT_USERNAME}:${GIT_PASSWORD}@$origin jenkins'''
-        }
-
-      }
-    }
-    stage('Push next commit') {
-      steps {
-        withCredentials(bindings: [usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-          sh '''touch test2.txt
-git add .
-git commit -m "test"
-origin=$(git remote -v | grep -m1 "" | sed -E "s/.*https:\\/\\/(.*.git).*/\\1/")
-git push https://${GIT_USERNAME}:${GIT_PASSWORD}@$origin jenkins'''
+          sh '''commits=$(git log --reverse --format=%H HEAD..master)
+if [ -z "$commits" ]; then 
+  echo "no more commits. done\\!";
+else 
+  nextcommit=$(echo "$commits" | grep -m1 "");
+  git merge --no-edit $commits
+  origin=$(git remote -v | grep -m1 "" | sed -E "s/.*https:\\/\\/(.*.git).*/\\1/")
+  git push https://${GIT_USERNAME}:${GIT_PASSWORD}@$origin jenkins
+fi'''
         }
 
       }
