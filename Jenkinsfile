@@ -11,11 +11,7 @@ pipeline {
       steps {
         withCredentials(bindings: [usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
           sh '''git log --reverse | tail -n 10
-git fetch --all
-git pull --all
-git branch
-git checkout master
-git checkout jenkins
+git branch -r
 commits=$(git log --reverse --format=%H HEAD..master)'''
         }
 
