@@ -15,7 +15,7 @@ pipeline {
 else
   git remote add neworigin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/titlisME/k-9.git
 fi
-git fetch master neworigin/master
+git fetch neworigin master
 git pull neworigin master
 commits=$(git log --reverse --format=%H HEAD..master)
 if [ -z "$commits" ]; then 
