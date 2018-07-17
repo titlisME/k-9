@@ -118,11 +118,15 @@ class WebDavBackend(
         throw UnsupportedOperationException("not supported")
     }
 
-    override fun checkServerSettings() {
+    override fun checkIncomingServerSettings() {
         webDavStore.checkSettings()
     }
 
     override fun sendMessage(message: Message) {
         webDavTransport.sendMessage(message)
+    }
+
+    override fun checkOutgoingServerSettings() {
+        webDavTransport.checkSettings()
     }
 }
