@@ -24,10 +24,12 @@ pipeline {
     }
     stage('3') {
       steps {
-        sh '''touch 123.txt
-git add .
-git commit -m "test"
-git push origin jenkins'''
+        withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+          sh '''touch 123.txt
+          git add .
+          git commit -m "test"
+          git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/titlisME/k-9.git jenkins'''
+        }
       }
     }
   }
