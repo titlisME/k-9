@@ -10,7 +10,7 @@ pipeline {
     stage('Pull next commit') {
       steps {
         withCredentials(bindings: [usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-          sh 'commits=$(git log --reverse --format=%H HEAD..master)'
+          sh 'git log'
         }
 
       }
