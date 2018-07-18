@@ -17,6 +17,9 @@ import com.fsck.k9.Preferences;
 import com.fsck.k9.mail.Message;
 import com.fsck.k9.mail.MessagingException;
 import com.fsck.k9.mail.internet.MimeMessage;
+import com.mobileenerlytics.eagle.tester.logger.EagleTester;
+
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +31,7 @@ public class EmailProviderTest extends ProviderTestCase2<EmailProvider> {
     private MimeMessage laterMessage;
     private MimeMessage reply;
     private MimeMessage replyAtSameTime;
+    static EagleTester eagleTester;
 
 
     public EmailProviderTest() {
@@ -63,29 +67,47 @@ public class EmailProviderTest extends ProviderTestCase2<EmailProvider> {
         setContext(InstrumentationRegistry.getTargetContext());
         super.setUp();
         buildMessages();
+        eagleTester = new EagleTester(InstrumentationRegistry.getTargetContext());
+    }
+
+    @AfterClass
+    public void tearDown() throws Exception {
+        eagleTester.finish();
     }
 
     @Test
-    public void onCreate_shouldReturnTrue() {
+    public void onCreate_shouldReturnTrue() throws Exception {
+        String testName = new Object() {}.getClass().getEnclosingMethod().getName();;
+        eagleTester.startMeasure(testName);
+
         assertNotNull(getProvider());
 
         boolean returnValue = getProvider().onCreate();
 
         assertEquals(true, returnValue);
+        eagleTester.stopMeasure(testName);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void query_withInvalidURI_throwsIllegalArgumentException() {
+    public void query_withInvalidURI_throwsIllegalArgumentException() throws Exception {
+        String testName = new Object() {}.getClass().getEnclosingMethod().getName();;
+        eagleTester.startMeasure(testName);
+        
         getProvider().query(
                 Uri.parse("content://com.google.www"),
                 new String[] {},
                 "",
                 new String[] {},
                 "");
+
+        eagleTester.stopMeasure(testName);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void query_forMessagesWithInvalidAccount_throwsIllegalArgumentException() {
+    public void query_forMessagesWithInvalidAccount_throwsIllegalArgumentException() throws Exception {
+        String testName = new Object() {}.getClass().getEnclosingMethod().getName();;
+        eagleTester.startMeasure(testName);
+
         Cursor cursor = getProvider().query(
                 Uri.parse("content://" + EmailProvider.AUTHORITY + "/account/1/messages"),
                 new String[] {},
@@ -94,10 +116,15 @@ public class EmailProviderTest extends ProviderTestCase2<EmailProvider> {
                 "");
 
         assertNotNull(cursor);
+
+        eagleTester.stopMeasure(testName);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void query_forMessagesWithAccountAndWithoutRequiredFields_throwsIllegalArgumentException() {
+    public void query_forMessagesWithAccountAndWithoutRequiredFields_throwsIllegalArgumentException() throws Exception {
+        String testName = new Object() {}.getClass().getEnclosingMethod().getName();;
+        eagleTester.startMeasure(testName);
+
         Account account = Preferences.getPreferences(getContext()).newAccount();
         account.getUuid();
 
@@ -110,10 +137,15 @@ public class EmailProviderTest extends ProviderTestCase2<EmailProvider> {
 
         assertNotNull(cursor);
         assertTrue(cursor.isAfterLast());
+
+        eagleTester.stopMeasure(testName);
     }
 
     @Test(expected = SQLException.class) //Handle this better?
-    public void query_forMessagesWithAccountAndRequiredFieldsWithNoOrderBy_throwsSQLiteException() {
+    public void query_forMessagesWithAccountAndRequiredFieldsWithNoOrderBy_throwsSQLiteException() throws Exception {
+        String testName = new Object() {}.getClass().getEnclosingMethod().getName();;
+        eagleTester.startMeasure(testName);
+
         Account account = Preferences.getPreferences(getContext()).newAccount();
         account.getUuid();
 
@@ -130,10 +162,15 @@ public class EmailProviderTest extends ProviderTestCase2<EmailProvider> {
 
         assertNotNull(cursor);
         assertTrue(cursor.isAfterLast());
+
+        eagleTester.stopMeasure(testName);
     }
 
     @Test
-    public void query_forMessagesWithEmptyAccountAndRequiredFieldsAndOrderBy_providesEmptyResult() {
+    public void query_forMessagesWithEmptyAccountAndRequiredFieldsAndOrderBy_providesEmptyResult() throws Exception {
+        String testName = new Object() {}.getClass().getEnclosingMethod().getName();;
+        eagleTester.startMeasure(testName);
+
         Account account = Preferences.getPreferences(getContext()).newAccount();
         account.getUuid();
 
@@ -151,10 +188,15 @@ public class EmailProviderTest extends ProviderTestCase2<EmailProvider> {
 
         assertNotNull(cursor);
         assertFalse(cursor.moveToFirst());
+
+        eagleTester.stopMeasure(testName);
     }
 
     @Test
-    public void query_forMessagesWithAccountAndRequiredFieldsAndOrderBy_providesResult() throws MessagingException {
+    public void query_forMessagesWithAccountAndRequiredFieldsAndOrderBy_providesResult() throws Exception {
+        String testName = new Object() {}.getClass().getEnclosingMethod().getName();;
+        eagleTester.startMeasure(testName);
+
         Account account = Preferences.getPreferences(getContext()).newAccount();
         account.getUuid();
         account.getLocalStore().getFolder("Inbox").appendMessages(Collections.singletonList(message));
@@ -173,10 +215,15 @@ public class EmailProviderTest extends ProviderTestCase2<EmailProvider> {
         assertNotNull(cursor);
         assertTrue(cursor.moveToFirst());
         assertEquals(message.getSubject(), cursor.getString(3));
+
+        eagleTester.stopMeasure(testName);
     }
 
     @Test
-    public void query_forMessagesWithAccountAndRequiredFieldsAndOrderBy_sortsCorrectly() throws MessagingException {
+    public void query_forMessagesWithAccountAndRequiredFieldsAndOrderBy_sortsCorrectly() throws Exception {
+        String testName = new Object() {}.getClass().getEnclosingMethod().getName();;
+        eagleTester.startMeasure(testName);
+
         Account account = Preferences.getPreferences(getContext()).newAccount();
         account.getUuid();
         account.getLocalStore().getFolder("Inbox").appendMessages(Arrays.asList(message, laterMessage));
@@ -198,10 +245,15 @@ public class EmailProviderTest extends ProviderTestCase2<EmailProvider> {
         assertEquals(laterMessage.getSubject(), cursor.getString(3));
         cursor.moveToNext();
         assertEquals(message.getSubject(), cursor.getString(3));
+
+        eagleTester.stopMeasure(testName);
     }
 
     @Test
-    public void query_forThreadedMessages_sortsCorrectly() throws MessagingException {
+    public void query_forThreadedMessages_sortsCorrectly() throws Exception {
+        String testName = new Object() {}.getClass().getEnclosingMethod().getName();;
+        eagleTester.startMeasure(testName);
+
         Account account = Preferences.getPreferences(getContext()).newAccount();
         account.getUuid();
         account.getLocalStore().getFolder("Inbox").appendMessages(Arrays.asList(message, laterMessage));
@@ -224,10 +276,15 @@ public class EmailProviderTest extends ProviderTestCase2<EmailProvider> {
         assertEquals(laterMessage.getSubject(), cursor.getString(3));
         cursor.moveToNext();
         assertEquals(message.getSubject(), cursor.getString(3));
+
+        eagleTester.stopMeasure(testName);
     }
 
     @Test
-    public void query_forThreadedMessages_showsThreadOfEmailOnce() throws MessagingException {
+    public void query_forThreadedMessages_showsThreadOfEmailOnce() throws Exception {
+        String testName = new Object() {}.getClass().getEnclosingMethod().getName();;
+        eagleTester.startMeasure(testName);
+
         Account account = Preferences.getPreferences(getContext()).newAccount();
         account.getUuid();
         account.getLocalStore().getFolder("Inbox").appendMessages(Collections.singletonList(message));
@@ -252,10 +309,15 @@ public class EmailProviderTest extends ProviderTestCase2<EmailProvider> {
         assertTrue(cursor.moveToFirst());
         assertEquals(2, cursor.getInt(5));
         assertFalse(cursor.moveToNext());
+
+        eagleTester.stopMeasure(testName);
     }
 
     @Test
-    public void query_forThreadedMessages_showsThreadOfEmailWithSameSendTimeOnce() throws MessagingException {
+    public void query_forThreadedMessages_showsThreadOfEmailWithSameSendTimeOnce() throws Exception {
+        String testName = new Object() {}.getClass().getEnclosingMethod().getName();;
+        eagleTester.startMeasure(testName);
+
         Account account = Preferences.getPreferences(getContext()).newAccount();
         account.getUuid();
         account.getLocalStore().getFolder("Inbox").appendMessages(Collections.singletonList(message));
@@ -280,10 +342,15 @@ public class EmailProviderTest extends ProviderTestCase2<EmailProvider> {
         assertTrue(cursor.moveToFirst());
         assertEquals(2, cursor.getInt(5));
         assertFalse(cursor.moveToNext());
+
+        eagleTester.stopMeasure(testName);
     }
 
     @Test
-    public void query_forAThreadOfMessages_returnsMessage() throws MessagingException {
+    public void query_forAThreadOfMessages_returnsMessage() throws Exception {
+        String testName = new Object() {}.getClass().getEnclosingMethod().getName();;
+        eagleTester.startMeasure(testName);
+
         Account account = Preferences.getPreferences(getContext()).newAccount();
         account.getUuid();
         Message message = new MimeMessage();
@@ -325,5 +392,7 @@ public class EmailProviderTest extends ProviderTestCase2<EmailProvider> {
         assertNotNull(threadCursor);
         assertTrue(threadCursor.moveToFirst());
         assertEquals(message.getSubject(), threadCursor.getString(3));
+
+        eagleTester.stopMeasure(testName);
     }
 }

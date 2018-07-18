@@ -28,6 +28,7 @@ dependencies {
     testImplementation "org.koin:koin-test:${versions.koin}"
 
     androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.1"
+    androidTestCompile 'com.mobileenerlytics:eagle-tester-logger:1.0.4@aar'
 }
 
 android {
