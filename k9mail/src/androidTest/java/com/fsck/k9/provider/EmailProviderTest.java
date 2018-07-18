@@ -22,6 +22,7 @@ import com.mobileenerlytics.eagle.tester.logger.EagleTester;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -68,18 +69,21 @@ public class EmailProviderTest extends ProviderTestCase2<EmailProvider> {
         setContext(InstrumentationRegistry.getTargetContext());
         super.setUp();
         buildMessages();
+    }
 
+    @BeforeClass
+    public static void setUpClass() throws Exception {
         eagleTester = new EagleTester(InstrumentationRegistry.getTargetContext());
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDownClass() throws Exception {
         eagleTester.finish();
     }
 
     @Test
     public void onCreate_shouldReturnTrue() throws Exception {
-        String testName = new Object() {}.getClass().getEnclosingMethod().getName();
+        String testName = "onCreate_shouldReturnTrue";
         eagleTester.startMeasure(testName);
 
         assertNotNull(getProvider());
