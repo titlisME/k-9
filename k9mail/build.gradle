@@ -37,6 +37,7 @@ dependencies {
     implementation 'org.apache.james:apache-mime4j-core:0.8.1'
 
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.mobileenerlytics:eagle-tester-logger:1.0.4@aar'
 
     testImplementation "org.robolectric:robolectric:${robolectricVersion}"
     testImplementation "junit:junit:${junitVersion}"
